@@ -1,26 +1,58 @@
 import React from 'react';
-import logo from './logo.svg';
+import { connect } from 'react-redux';
+import { increment } from './store/slices/countSlice';
+import Demo from './components/Demo';
+import Layout from './components/Layout';
+import Index from './components/pure';
+import { RootState } from './store/store';
 import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+type IProps = {
+    message: string;
+    increment: (a: number) => void;
+    value: number;
+};
+type IState = {
+    count: number;
+};
+class App extends React.Component<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            count: 0,
+        };
+    }
+    componentDidMount() {
+        console.log(this.props);
+    }
+    static getDerivedStateFromProps(props: IProps, state: IState) {
+        console.log(state);
+        console.warn('Derived state');
+        return {
+            ...props,
+            count: 10,
+        };
+    }
+    static defaultProps = {
+        message: 'Ok',
+    };
+    handleIncrement = () => {
+        this.props.increment(2);
+    };
+    render() {
+        return (
+            <div className="App">
+                <h1>Reactjs</h1>
+                <h2>{this.props.message}</h2>
+                <h2>{this.state.count}</h2>
+                <Layout>
+                    <Demo />
+                </Layout>
+                <Index />
+                <h3>{this.props.value}</h3>
+                <button onClick={this.handleIncrement}>Increment</button>
+            </div>
+        );
+    }
 }
-
-export default App;
+const mapStateToProps = (state: RootState) => state.counter;
+export default connect(mapStateToProps, { increment })(App);
