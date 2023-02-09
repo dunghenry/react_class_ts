@@ -13,20 +13,23 @@ type IProps = {
 };
 type IState = {
     count: number;
+    inputRef: React.RefObject<HTMLInputElement>;
 };
 class App extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
             count: 0,
+            inputRef: React.createRef(),
         };
     }
     componentDidMount() {
         console.log(this.props);
     }
     static getDerivedStateFromProps(props: IProps, state: IState) {
-        console.log(state);
-        console.warn('Derived state');
+        console.log('State', state);
+        // console.warn('Derived state');
+        console.log('Props', props);
         return {
             ...props,
             count: 10,
@@ -49,6 +52,7 @@ class App extends React.Component<IProps, IState> {
                 </Layout>
                 <Index />
                 <h3>{this.props.value}</h3>
+                <input type="text" ref={this.state.inputRef} />
                 <button onClick={this.handleIncrement}>Increment</button>
             </div>
         );
